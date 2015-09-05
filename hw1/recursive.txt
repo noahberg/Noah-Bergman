@@ -1,0 +1,6 @@
+A correctly parenthesized expression can be characterized as follows: 
+	- an empty string is correctly parenthesized
+	- a string containing no brackets or parentheses is 
+	  correctly parenthesized
+	- if a is a left bracket or left parentheses, and b is the 
+	  matching right bracket or parentheses, and c, d, and e are all correctly parenthesized expressions, then cadbe is correctly parenthesized as well.
