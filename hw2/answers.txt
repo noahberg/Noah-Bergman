@@ -1,0 +1,22 @@
+1)
+	a) staΘtus of README.md = unmodified
+	b) README.md = modified, fun_problem.txt = untracked
+	c) status of both = staged
+	d) status of both = modified
+	e) README.md = staged fun_problem.txt = unmodified
+	   Fun_problem.txt is empty, because we checked out the file from git and at the last commit its contents were empty.
+	f) Te status of README.md is both modified and staged. The version of README.md without 
+	   "Fancy git move" is staged for commit as this was the state of the file when git add was ran. The version of README.md with "Fancy git move" has not yet been staged for commit.
+
+3) 
+	a) Θ(n^3/2), explanation:
+	   The innermost for-loop is sigma(Θ(1)) from o to n which equals Θ(n). This loop is executed multiple times though. The first time it is executed is when i==n^1/2 then it is executed again when i==2(n^1/2) and again when i==3(n^1/2) .... until n is reached at point it will have been executed n^1/2 times (because n^1/2*n^1/2 = n). This gives a runtime of sigma(Θ(n)) from 0 to n^1/2 which equals Θ(n^3/2).
+	b) Θ(n*logn), explanation:
+	   The innermost for-loop is sigma(Θ(1)) from 0 to size which equals Θ(size). This loop is executed multiple times though. The first is executed whenever i == size. We need to determine how many times this happens. The first is when is when i == size, then when i == 3/2(previous size) and again when i == 3/2(previous size) ... until size has reached the size of n, or the loop ends. This can be simplified to log(n) times, because we ignore base in runtime analysis. The runtime is now sigma(Θ(n)) from o until logn which equals Θ(n*logn).
+	c) Θ(n^3/2), explanation: 
+		This analysis is essentially the same as a). The innermost for-loop is sigma(Θ(1)) from o to n which equals Θ(n). This loop is executed multiple times though. The first time it is executed is when i == size and again when i == size + n^1/2, and then again when i == size + 2(n^1/2) ... until size is the size of n. This can be simplified to n^1/2 times. The runtime is now sigma(Θ(n)) from 0 to n^1/2 which equals Θ(n^3/2).
+
+4) 
+	a) A set of strings that hold individual words. This is the best option because we only care about what words appear on the page, not how many times they appear or the order in which they appear.
+	b) A map of students (the keys) to a set containing the classes they are in (the values). A map allows us to easily access the set of classes a student is enrolled in. From this set we can then easily check for a particular class.
+	c) A list of strings (names of the countries) in the order they will appear in the parade. A list allows us to maintain order of the countries, find out which country is at a certain position, and add or take away countries if they can't make it to the parade.
