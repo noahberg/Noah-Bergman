@@ -241,7 +241,8 @@ void MainWindow::showFile() {
 		string current = outgoing_links[i]->filename();
 		outgoingList->addItem(QString::fromStdString(current));
 	}
-
+	incomingList->setCurrentRow(0);
+	outgoingList->setCurrentRow(0);
 
 
 	otherWin->show();
@@ -304,6 +305,8 @@ void MainWindow::updateFileIn() {
 		string current = outgoing_links[i]->filename();
 		outgoingList->addItem(QString::fromStdString(current));
 	}
+	incomingList->setCurrentRow(0);
+	outgoingList->setCurrentRow(0);
 }
 
 void MainWindow::updateFileOut() {
@@ -363,6 +366,8 @@ void MainWindow::updateFileOut() {
 		string current = outgoing_links[i]->filename();
 		outgoingList->addItem(QString::fromStdString(current));
 	}
+	incomingList->setCurrentRow(0);
+	outgoingList->setCurrentRow(0);
 }
 
 void MainWindow::sortByOutDisplay() {
@@ -381,6 +386,8 @@ void MainWindow::sortByOutDisplay() {
 		string current = incoming_links[i]->filename();
 		incomingList->addItem(QString::fromStdString(current));
 	}
+	incomingList->setCurrentRow(0);
+	outgoingList->setCurrentRow(0);
 
 
 }
@@ -401,7 +408,8 @@ void MainWindow::sortByInDisplay() {
 		string current = incoming_links[i]->filename();
 		incomingList->addItem(QString::fromStdString(current));
 	}
-
+	incomingList->setCurrentRow(0);
+	outgoingList->setCurrentRow(0);
 
 }
 
@@ -422,8 +430,9 @@ void MainWindow::sortByNameDisplay() {
 		string current = incoming_links[i]->filename();
 		incomingList->addItem(QString::fromStdString(current));
 	}
-
-
+	
+	incomingList->setCurrentRow(0);
+	outgoingList->setCurrentRow(0);
 }
 
 
