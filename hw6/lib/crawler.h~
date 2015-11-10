@@ -1,0 +1,29 @@
+#ifndef CRAWLER_H
+#define CRAWLER_H
+
+#include <fstream>
+#include <string>
+#include <map>
+
+#include "webpage.h"
+#include "myset.h"
+#include "pageparser.h"
+#include "util.h"
+
+class Crawler {
+	public:
+		Crawler(std::string file);
+		Crawler();
+		~Crawler();
+		void crawl(PageParser* parser);
+		void crawl_helper(WebPage* current, PageParser* parser, ofstream* output);
+		std::string get_output_file();
+
+	private:
+		std::string index_file;
+		std::string output_file;
+		std::map<std::string, WebPage*> index;
+};
+
+
+#endif

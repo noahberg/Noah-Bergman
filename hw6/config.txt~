@@ -1,0 +1,5 @@
+# Nothing
+INDEX_FILE = data/index.txt
+OUTPUT_FILE = output.txt
+RESTART_PROBABILITY = .15
+STEP_NUMBER = 30
