@@ -76,7 +76,7 @@ public:
      while(curr) {
         if(newNode->getKey() == curr->getKey()) {
           curr->setValue(newNode->getValue());
-          break;
+          return;
         }
         else if(newNode->getKey() < curr->getKey()) {
           if(curr->getLeft() == NULL) {
