@@ -21,13 +21,14 @@ MinHeap::~MinHeap() {
 }
 
 void MinHeap::trickleDown(int index) {
-	
-	if((dAry*index+1) > heap->size()) return;
+	int heapSize = heap->size();
+	if((dAry*index+1) > heapSize) return;
 
 	int smallestChild = dAry*index+1;
 	int currentChild = dAry*index+2;
 	LessThanPair a;
-	while((currentChild <= ((dAry*index)+dAry)) && (currentChild < heap->size())) {
+	
+	while((currentChild <= ((dAry*index)+dAry)) && (currentChild < heapSize)) {
 		if(a((*heap)[currentChild], (*heap)[smallestChild])) {
 			smallestChild = currentChild;
 		}
