@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <title>OMYogaCoach</title>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+
+        
+        <link href="css/my.css" rel="stylesheet" type="text/css" />
+       
+        <style>
+        </style>
+    </head>
+    <body>
+            <form action="javascript:void(0);" onsubmit="onClick()" class="pure-form">
+                <p>
+                     <label>Size of Classroom (Sq Ft): </label>
+                    <input id="class-size" type="number" > 
+                </p>
+                <p>
+                    <label>Classes Per Week: </label>
+                    <input id="class-number" type="number" > 
+                </p>
+                <p>
+                    <label>Price Per Student:  </label>
+                    <input id="class-price" type="number"  > 
+                </p>
+                <p>
+                    <label>Rent Per Month: </label>
+                    <input id="class-rent" type="number" > 
+                </p>
+                <p>
+                    <label>Insurance Rate Per Month: </label>
+                    <input id="class-insurance" type="number" > 
+                </p>
+                <p>
+                    <label>Estimated Electricity Per Month: </label>
+                    <input id="class-electricity" type="number"> 
+                </p>
+                <p>
+                    <label>Instructor Payroll Per Class: </label>
+                    <input id="class-payroll" type="number" > 
+                </p>
+
+                    
+            </form>
+            <div class="container1">
+                 <input class="calculator"  type="submit" value="Calculate" onClick="onClick()">
+            </div>
+            <div class="container2" > </div>
+
+         <script type="text/javascript">
+            
+            var width = 300; var height = 350;
+            var svg1 = d3.select(".container2").append("svg");
+            var svg2 = d3.select(".container2").append("svg")
+            svg1.attr("height", height).attr("width", width-50).style("float", "left");
+            svg2.attr("height", height).attr("width", width).style("float", "left");
+
+            function clear_svgs() {
+                svg1.selectAll("text").remove();
+                svg1.selectAll("rect").remove();
+                svg2.selectAll("text").remove();
+                svg2.selectAll("rect").remove();
+            }
+
+            function onClick() {
+                clear_svgs();
+
+                var size = parseInt(document.getElementById('class-size').value);
+                var num_classes = parseInt(document.getElementById('class-number').value);
+                var price = parseInt(document.getElementById('class-price').value);
+                var rent = parseInt(document.getElementById('class-rent').value);
+                var insurance = parseInt(document.getElementById('class-insurance').value);
+                var electricity = parseInt(document.getElementById('class-electricity').value);
+                var payroll = parseInt(document.getElementById('class-payroll').value);
+                if(isNaN(size) || isNaN(num_classes) || isNaN(price) || isNaN(rent) || isNaN(insurance) || isNaN(electricity) || isNaN(payroll)) {
+                    alert("Please Fill Out All Fields (Numbers Only");
+                    return;
+                }
+                var revenue = Math.floor(size/21) * num_classes * 4 * price;
+                var cost = rent + insurance + electricity + payroll*num_classes*4;
+                var profit = revenue - cost;
+               // profit.formatMoney(2, ".", ",");
+               
+               var title1 = "Projected Monthly Sales";
+                svg1.append("text").attr("font-family", "Gill Sans").text(title1).attr("y", 30).attr("fill", "grey").attr("x", 125).attr("text-anchor", "middle").attr("font-size", "17px");
+                
+
+                for(var i=50; i<=300; i+=250/6) {
+                    svg1.append("rect").attr("x", 0).attr("y", i).attr("fill", "grey").attr("height", 1).attr("width", 250);
+                    svg2.append("rect").attr("x", 50).attr("y", i).attr("fill", "grey").attr("height", 1).attr("width", 250);
+
+                }
+                
+
+                var title2 = "Projected Monthly Costs";
+                svg2.append("text").attr("font-family", "Gill Sans").text(title2).attr("y", 30).attr("fill", "grey").attr("x", 175).attr("text-anchor", "middle").attr("font-size", "17px");
+               
+
+                /* 
+                    Code block to fill projected sales breakdown graph
+                */
+                var barWidth = 35;
+                var maxBarHeight = 225;
+                var buffer = (250-3*barWidth)/4;
+                var x_value =0;
+                var p_or_l = "Profit";
+                if(profit < 0) {
+                    p_or_l = "Loss";
+                }
+                var sales = [revenue, cost, profit];
+                var sales_key = ["Revenue", "Cost", p_or_l];
+                var max = 0;
+                for(var i = 0; i<3; i++) {
+                    if(sales[i] > max)
+                        max = sales[i];
+                }
+
+                svg1.selectAll("rect.bar").data(sales).enter().append("rect")
+                    .attr("x", function(d, i) {
+                        return i*(barWidth+buffer)+buffer;
+
+                    })
+                    .attr("y", function(d, i) {
+                        if(d < 0)
+                            d = 0-d;
+                        return (maxBarHeight - (d/max)*maxBarHeight + 75);
+                    })
+                    .attr("width", barWidth)
+                    .attr("height", function(d, i) {
+                        if(d < 0)
+                            d = 0-d;
+                        return d/max*maxBarHeight;
+                    })
+                    .on("mouseover", function(d, i) {
+
+                        toolTip_sales(d, d3.select(this).attr("x"), d3.select(this).attr("y"));
+
+                    })
+                    .on("mouseout", function(d, i) {
+                        svg1.selectAll(".tool").remove();
+
+                        
+                      
+                    })
+                    .attr("fill", function(d, i) {
+                        if(sales_key[i] == "Revenue")
+                            return "#36BAB2";
+                        else if(sales_key[i] == "Cost")
+                            return "#610061";
+                        else if(sales_key[i] == "Loss")
+                            return "#F75D59";
+                        else
+                            return "#64E986";
+                    })
+                    .attr("rx", 3)
+                    .attr("ry", 3);
+                x_value+=barWidth/2;
+                for(var i = 0; i <3; i++) {
+                    x_value+=buffer;
+                    svg1.append("text").text(sales_key[i]).attr("y", 315).attr("x", x_value).attr("text-anchor", "middle").attr("font-family", "Gill Sans").attr("font-size", "12px").attr("fill", "grey");
+                    x_value+=barWidth;
+
+                }
+
+                
+                
+                /* 
+                    Code block to fill projected Cost Breakdown graph
+                */
+                var barWidth = 35;
+                buffer = (250-barWidth*4)/5;
+                maxBarHeight = 225;
+                x_value = 50;
+                var cost_key = ["Rent", "Electricity", "Insurance", "Payroll"]
+                var cost = [rent, electricity, insurance, payroll*num_classes*4];
+                max=0;
+                for(var i = 0; i<4; i++) {
+                    if(cost[i] > max)
+                        max = cost[i];
+                }
+                x_value+=barWidth/2;
+                for(var i = 0; i <4; i++) {
+                    x_value+=buffer;
+                    svg2.append("text").text(cost_key[i]).attr("y", 315).attr("x", x_value).attr("text-anchor", "middle").attr("font-family", "Gill Sans").attr("font-size", "12px").attr("fill", "grey");
+                    x_value+=barWidth;
+                }
+                svg2.selectAll("rect.bar").data(cost).enter().append("rect")
+                    .attr("x", function(d, i) {
+                        return i*(barWidth+buffer)+buffer+50;
+                    })
+                    .attr("y", function(d, i) {
+                        return (maxBarHeight - (d/max)*maxBarHeight + 75);
+                    })
+                    .attr("width", barWidth)
+                    .attr("height", function(d, i) {
+
+                        return d/max*maxBarHeight;
+                    })
+                    .on("mouseover", function(d, i) {
+                        toolTip_cost(d, d3.select(this).attr("x"), d3.select(this).attr("y"));
+                    })
+                    .on("mouseout", function(d, i) {
+                        svg2.selectAll(".tool").remove();
+                    })
+                    .attr("rx", 3)
+                    .attr("ry", 3)
+                    .attr("fill", function(d, i) {
+                        if(i==0)
+                            return "#36BAB2";
+                        if(i==1)
+                            return "#610061";
+                        if(i==2)
+                            return "#FC6C85";
+                        if(i==3)
+                            return "#3BB9FF";
+                    });
+            }
+            
+                function toolTip_cost(data, x, y) {
+                    x = parseInt(x);
+                    y = parseInt(y);
+                    y-=60;
+                    x -=20;
+                    svg2.append("rect").attr("height", 50).attr("width", 75).attr("x", x).attr("y", y).classed("tool", true).attr("fill", "grey");
+                    data = data/1000;
+                    data = data.toFixed(1);
+                    var text = "$"+ data + "K";
+                   
+                    svg2.append("text").text(text).attr("x", x+37.5).attr("y", y+27).attr("text-anchor", "middle").attr("fill", "white").classed("tool", true).attr("font-family", "Gill Sans");
+                }
+                function toolTip_sales(data, x, y) {
+                    x = parseInt(x);
+                    y = parseInt(y);
+                    y-=60;
+                    x -=20;
+                    svg1.append("rect").attr("height", 50).attr("width", 75).attr("x", x).attr("y", y).classed("tool", true).attr("fill", "grey");
+                    data = data/1000;
+                    data = data.toFixed(1);
+                    var text = "$"+ data + "K";
+                    svg1.append("text").text(text).attr("x", x+37.5).attr("y", y+27).attr("text-anchor", "middle").attr("fill", "white").classed("tool", true).attr("font-family", "Gill Sans");
+
+
+                }
+
+        </script>
+    </body>
+</html>   
